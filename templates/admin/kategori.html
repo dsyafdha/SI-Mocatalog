@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block title %}MoCatalog{% endblock %} {%
+block content %}
+<div style="max-width: 800px; margin: auto">
+  <h2>🏷️ Kelola Kategori</h2>
+  <br />
+  <div class="table-wrapper">
+    <form
+      id="addKategoriForm"
+      method="post"
+      action="{{ url_for('admin_kategori_add') }}"
+      class="admin-form"
+      style="margin-bottom: 2rem"
+    >
+      <div style="display: flex; gap: 10px; align-items: flex-end">
+        <div class="form-group" style="flex: 1">
+          <label>Nama Kategori</label>
+          <input
+            name="nama_kategori"
+            id="nama_kategori"
+            placeholder="Contoh: Action"
+            required
+          />
+        </div>
+        <button
+          type="button"
+          class="btn primary"
+          style="height: 43px"
+          onclick="confirmAddKategori()"
+        >
+          Tambah
+        </button>
+      </div>
+    </form>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Kategori</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k in kategori %}
+        <tr>
+          <td>{{ k.nama_kategori }}</td>
+          <td style="text-align: right">
+            <button
+              type="button"
+              class="btn danger"
+              onclick="confirmDeleteKategori('{{ k.id_kategori }}', '{{ k.nama_kategori }}')"
+            >
+              Hapus
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function confirmAddKategori() {
+    const namaKategoriInput = document.getElementById("nama_kategori");
+    const namaKategori = namaKategoriInput.value;
+
+    if (!namaKategori.trim()) {
+      showConfirm(
+        "Nama kategori tidak boleh kosong! Silakan isi terlebih dahulu.",
+        function () {
+          namaKategoriInput.focus();
+        },
+        "Peringatan: Input Diperlukan"
+      );
+      return;
+    }
+
+    showConfirm(
+      `Apakah Anda yakin ingin menambahkan kategori "${namaKategori}"?`,
+      function () {
+        document.getElementById("addKategoriForm").submit();
+      }
+    );
+  }
+
+  function confirmDeleteKategori(id, nama) {
+    showConfirm(
+      `Apakah Anda yakin ingin menghapus kategori "${nama}"?`,
+      function () {
+        window.location.href = `/admin/kategori/delete/${id}`;
+      }
+    );
+  }
+</script>
+{% endblock %}

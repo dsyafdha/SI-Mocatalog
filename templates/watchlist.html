@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% block title %}MoCatalog{% endblock %} {% block
+content %}
+<div class="table-wrapper">
+  <div class="progress-container">
+    <div class="progress-header">
+      <div class="progress-title">
+        <h2>📊 Progres Menonton</h2>
+        <p class="progress-subtitle">
+          Anda telah menyelesaikan <strong>{{ stats.watched }}</strong> dari
+          <strong>{{ stats.total }}</strong> film.
+        </p>
+      </div>
+      <div class="progress-percentage">{{ stats.percent }}%</div>
+    </div>
+
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" style="width: {{ stats.percent }}%;"></div>
+    </div>
+  </div>
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Film</th>
+        <th>Kategori</th>
+        <th>Tahun</th>
+        <th>Status</th>
+        <th style="text-align: center">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for w in watchlist %}
+      <tr>
+        <td class="{{ 'watched-row' if w.status == 'Sudah Ditonton' else '' }}">
+          {{ w.judul }}
+        </td>
+        <td style="color: var(--text-muted)">{{ w.nama_kategori }}</td>
+        <td style="color: var(--text-muted)">{{ w.tahun }}</td>
+        <td>
+          <span
+            class="badge-status {{ 'badge-watched' if w.status == 'Sudah Ditonton' else 'badge-waiting' }}"
+          >
+            {{ w.status }}
+          </span>
+        </td>
+        <td>
+          <div class="col-action" style="justify-content: center">
+            {% if w.status == 'Belum Ditonton' %}
+            <a
+              href="{{ url_for('watched_watchlist', id=w.id_watchlist) }}"
+              class="btn info small"
+              >Selesai</a
+            >
+            {% endif %}
+            <a
+              href="{{ url_for('delete_watchlist', id=w.id_watchlist) }}"
+              class="btn danger small"
+              >Hapus</a
+            >
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if not watchlist %}
+  <div class="empty-state">
+    <p>Belum ada film di watchlist Anda.</p>
+    <br />
+    <a href="{{ url_for('home') }}" class="btn primary">Cari Film</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

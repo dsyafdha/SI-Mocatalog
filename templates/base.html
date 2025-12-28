@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}MoCatalog{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/" class="nav-brand">MoCatalog</a>
+      {% if session.username %}
+      <div class="nav-right">
+        <div class="nav-user-profile">
+          <div class="user-details">
+            <span class="username">{{ session.username }}</span>
+            <span class="user-role">{{ session.role | upper }}</span>
+          </div>
+          <div class="nav-divider"></div>
+        </div>
+        <ul class="nav-menu" id="navMenu">
+          {% if session.role == 'admin' %}
+          <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('admin_film') }}">Film</a></li>
+          <li><a href="{{ url_for('admin_kategori') }}">Kategori</a></li>
+          {% else %}
+          <li><a href="{{ url_for('user_index') }}">Katalog</a></li>
+          <li><a href="{{ url_for('watchlist') }}">Watchlist</a></li>
+          {% endif %}
+          <li>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+          </li>
+        </ul>
+        <button class="nav-toggle" id="navToggle">☰</button>
+      </div>
+      {% endif %}
+    </nav>
+
+    <div class="main">
+      {% if request.endpoint != 'login' %} {% with msgs =
+      get_flashed_messages(with_categories=true) %} {% if msgs %} {% for cat,
+      msg in msgs %}
+      <div class="alert {{ cat }}">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %} {% endif %} {% block content %}{%
+      endblock %}
+    </div>
+
+    <div id="customModal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-icon">⚠️</div>
+        <h3 id="modalTitle">Konfirmasi</h3>
+        <p id="modalMessage">
+          Apakah Anda yakin ingin melanjutkan tindakan ini?
+        </p>
+        <div class="modal-actions">
+          <button id="modalCancel" class="btn">Batal</button>
+          <button id="modalConfirm" class="btn primary">Ya, Lanjutkan</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; 2025 <span>MoCatalog</span> | Sistem Informasi Katalog Film</p>
+    </footer>
+
+    <script>
+      // 1. LOGIC NAVBAR MOBILE
+      const navBtn = document.getElementById("navToggle");
+      const navMenu = document.getElementById("navMenu");
+      if (navBtn) {
+        navBtn.onclick = () => navMenu.classList.toggle("active");
+      }
+
+      // 2. LOGIC CUSTOM MODAL
+      const modal = document.getElementById("customModal");
+      const modalMsg = document.getElementById("modalMessage");
+      const btnConfirm = document.getElementById("modalConfirm");
+      const btnCancel = document.getElementById("modalCancel");
+
+      function showConfirm(message, callback) {
+        modalMsg.innerText = message;
+        modal.style.display = "flex";
+        setTimeout(
+          () => modal.querySelector(".modal-card").classList.add("show"),
+          10
+        );
+
+        btnConfirm.onclick = function () {
+          closeModal();
+          callback();
+        };
+
+        btnCancel.onclick = closeModal;
+      }
+
+      function closeModal() {
+        modal.querySelector(".modal-card").classList.remove("show");
+        setTimeout(() => (modal.style.display = "none"), 300);
+      }
+
+      window.onclick = function (event) {
+        if (event.target == modal) closeModal();
+      };
+
+      // 3. AUTO-DETECTION UNTUK TOMBOL LOGOUT & HAPUS
+      document.addEventListener("click", function (e) {
+        const target = e.target.closest("a");
+        if (!target) return;
+
+        // Cek apakah link mengandung kata logout atau class/teks hapus
+        const isLogout = target.href.includes("logout");
+        const isDelete =
+          target.innerText.toLowerCase().includes("hapus") ||
+          target.classList.contains("danger") ||
+          target.href.includes("delete");
+
+        if (isLogout || isDelete) {
+          e.preventDefault(); // Batalkan aksi default link
+
+          let message = isLogout
+            ? "Apakah Anda yakin ingin keluar dari aplikasi?"
+            : "Data yang dihapus tidak dapat dikembalikan. Lanjutkan?";
+
+          showConfirm(message, function () {
+            window.location.href = target.href; // Redirect jika user pilih 'Ya'
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

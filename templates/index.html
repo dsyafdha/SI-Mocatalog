@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block title %}MoCatalog{% endblock %} {% block
+content %}
+<h2>🎬 Daftar Film</h2>
+
+<div class="movie-grid">
+  {% for f in films %}
+  <a href="{{ url_for('film_detail', id=f.id_film) }}" class="movie-card-link">
+    <div class="movie-card fade-in">
+      <img
+        src="{{ url_for('static', filename='posters/' ~ f.poster) }}"
+        alt="{{ f.judul }}"
+      />
+
+      <div class="movie-info">
+        <h3>{{ f.judul }}</h3>
+        <p>{{ f.tahun }} • {{ f.nama_kategori }}</p>
+
+        <object>
+          <a
+            href="{{ url_for('add_watchlist', id_film=f.id_film) }}"
+            class="btn"
+          >
+            + Watchlist
+          </a>
+        </object>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% for p in range(1, total_pages+1) %}
+  <a href="?page={{ p }}" class="{{ 'active' if p==page else '' }}">{{ p }}</a>
+  {% endfor %}
+</div>
+{% endif %} {% endblock %}

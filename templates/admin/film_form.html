@@ -1,0 +1,97 @@
+{% extends 'base.html' %} {% block title %}MoCatalog{% endblock %} {% block
+content %}
+<div class="container-center">
+  <div class="form-wrapper">
+    <h2 style="text-align: center; margin-bottom: 1.5rem">
+      ➕ Tambah Film Baru
+    </h2>
+
+    <form
+      id="addFilmForm"
+      method="post"
+      enctype="multipart/form-data"
+      class="admin-form"
+    >
+      <div class="form-group">
+        <label>Judul Film</label>
+        <input
+          type="text"
+          name="judul"
+          placeholder="Masukkan judul film..."
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Kategori</label>
+        <select name="id_kategori" required>
+          <option value="" disabled selected>-- Pilih Kategori --</option>
+          {% for k in kategori %}
+          <option value="{{ k.id_kategori }}">{{ k.nama_kategori }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Tahun Rilis</label>
+        <input type="number" name="tahun" placeholder="Contoh: 2024" required />
+      </div>
+
+      <div class="form-group">
+        <label>Sinopsis</label>
+        <textarea
+          name="sinopsis"
+          rows="5"
+          placeholder="Tulis cerita singkat film..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>File Poster</label>
+        <input type="file" name="poster" accept="image/*" required />
+        <small style="color: var(--text-muted)"
+          >Format: JPG, PNG, atau WebP</small
+        >
+      </div>
+
+      <div
+        class="form-actions"
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-top: 20px;
+        "
+      >
+        <button
+          type="button"
+          class="btn primary"
+          onclick="confirmAdd()"
+          style="width: 100%"
+        >
+          Simpan Film
+        </button>
+        <a
+          href="{{ url_for('admin_film') }}"
+          class="btn info"
+          style="text-align: center; text-decoration: none"
+        >
+          Batal
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function confirmAdd() {
+    showConfirm(
+      "Apakah Anda yakin data film yang diisi sudah benar?",
+      function () {
+        document.getElementById("addFilmForm").submit();
+      }
+    );
+  }
+</script>
+{% endblock %}

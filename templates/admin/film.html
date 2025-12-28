@@ -1,0 +1,38 @@
+{% extends 'base.html' %} 
+{% block title %}MoCatalog{% endblock %} 
+{% block content %}
+<div class="main-header">
+    <h2>🎬 Data Film</h2>
+    <a href="{{ url_for('admin_film_add') }}" class="btn primary">+ Tambah Film</a>
+</div>
+
+<div class="admin-card-list">
+    {% for f in films %}
+    <div class="admin-card-item">
+        <div class="card-side">
+            <span class="card-number">#{{ loop.index }}</span>
+            <img src="{{ url_for('static', filename='posters/' ~ f.poster) }}" alt="Poster">
+        </div>
+
+        <div class="card-main">
+            <div class="card-head">
+                <h3 class="card-title">{{ f.judul }}</h3>
+                <span class="card-tag">{{ f.tahun }}</span>
+            </div>
+            <p class="card-text">
+                {{ f.sinopsis[:120] }}{% if f.sinopsis|length > 120 %}...{% endif %}
+            </p>
+        </div>
+
+        <div class="card-control">
+            <a href="{{ url_for('admin_film_edit', id=f.id_film) }}" class="btn small info">Edit</a>
+            <a href="{{ url_for('admin_film_delete', id=f.id_film) }}" class="btn small danger">Hapus</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>Belum ada data film.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

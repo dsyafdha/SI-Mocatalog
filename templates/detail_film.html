@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container-detail">
+  <div class="detail-wrapper">
+    <div class="detail-poster">
+      <img
+        src="{{ url_for('static', filename='posters/' ~ film.poster) }}"
+        alt="{{ film.judul }}"
+      />
+    </div>
+
+    <div class="detail-content">
+      <h1>{{ film.judul }}</h1>
+      <div class="meta-info">
+        <span>📅 {{ film.tahun }}</span>
+        <span>🏷️ {{ film.nama_kategori }}</span>
+      </div>
+
+      <hr class="divider" />
+
+      <h3>Sinopsis</h3>
+      <p class="synopsis">{{ film.sinopsis }}</p>
+
+      <div class="detail-actions">
+        <a
+          href="{{ url_for('add_watchlist', id_film=film.id_film) }}"
+          class="btn primary"
+        >
+          + Tambah ke Watchlist
+        </a>
+        <a href="{{ url_for('user_index') }}" class="btn info"> Kembali </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
