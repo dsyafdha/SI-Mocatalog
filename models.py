@@ -3,42 +3,49 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Database:
-    def __init__(self):
-        if os.environ.get('PYTHONANYWHERE_DOMAIN'):
-            # ===== PYTHONANYWHERE =====
-            self.conn = pymysql.connect(
-                host='dsyafdha.mysql.pythonanywhere-services.com',
-                user='dsyafdha',
-                password='MySQLPass',
-                database='dsyafdha$mocatalog',
-                cursorclass=pymysql.cursors.DictCursor,
-                autocommit=True
-            )
-        else:
-            # ===== LOCAL =====
-            self.conn = pymysql.connect(
-                host='localhost',
-                user='root',
-                password='MySQLPass',
-                database='movie_catalog',
-                cursorclass=pymysql.cursors.DictCursor,
-                autocommit=True
-            )
+    def connect(self):
+        return pymysql.connect(
+            host='dsyafdha.mysql.pythonanywhere-services.com',
+            user='dsyafdha',
+            password='MySQLPass',
+            database='dsyafdha$mocatalog',
+            cursorclass=pymysql.cursors.DictCursor,
+            autocommit=True
+        )
 
     def query(self, sql, params=None):
-        with self.conn.cursor() as cur:
-            cur.execute(sql, params)
-            return cur
+        conn = self.connect()
+        cur = conn_attach = conn.cursor()
+        cur.execute(sql, params)
+        cur.close()
+        conn.close()
+
 
     def fetchall(self, sql, params=None):
-        with self.conn.cursor() as cur:
-            cur.execute(sql, params)
-            return cur.fetchall()
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+        return result
+
 
     def fetchone(self, sql, params=None):
-        with self.conn.cursor() as cur:
-            cur.execute(sql, params)
-            return cur.fetchone()
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        result = cur.fetchone()
+        cur.close()
+        conn.close()
+        return result
+
+    def execute(self, sql, params=None):
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        cur.close()
+        conn.close()
 
 
 db = Database()
@@ -110,9 +117,9 @@ class Film:
     @staticmethod
     def get_by_id(id):
         return db.fetchone("""
-            SELECT f.*, k.nama_kategori 
-            FROM film f 
-            JOIN kategori_film k ON f.id_kategori = k.id_kategori 
+            SELECT f.*, k.nama_kategori
+            FROM film f
+            JOIN kategori_film k ON f.id_kategori = k.id_kategori
             WHERE f.id_film = %s
         """, (id,))
 
@@ -163,27 +170,27 @@ class User:
         if user and check_password_hash(user['password'], password):
             return user
         return None
-    
+
 # WATCHLIST
 # =====================================================
 class Watchlist:
     @staticmethod
     def get_user(id_user):
         return db.fetchall("""
-            SELECT 
-                w.id_watchlist, 
-                w.status, 
+            SELECT
+                w.id_watchlist,
+                w.status,
                 f.id_film,
-                f.judul, 
+                f.judul,
                 f.poster,
-                f.tahun, 
+                f.tahun,
                 k.nama_kategori
             FROM watchlist w
             JOIN film f ON w.id_film = f.id_film
             JOIN kategori_film k ON f.id_kategori = k.id_kategori
             WHERE w.id_user = %s
-            ORDER BY 
-                CASE WHEN w.status = 'Belum Ditonton' THEN 0 ELSE 1 END, 
+            ORDER BY
+                CASE WHEN w.status = 'Belum Ditonton' THEN 0 ELSE 1 END,
                 w.id_watchlist DESC
         """, (id_user,))
 
@@ -204,7 +211,7 @@ class Watchlist:
     @staticmethod
     def mark_as_watched(id_watchlist):
         db.query("""
-            UPDATE watchlist 
-            SET status = 'Sudah Ditonton' 
+            UPDATE watchlist
+            SET status = 'Sudah Ditonton'
             WHERE id_watchlist = %s
         """, (id_watchlist,))
