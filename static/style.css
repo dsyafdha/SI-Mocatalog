@@ -160,23 +160,23 @@ body { min-height: 100vh; color: var(--text-main); background: var(--bg-dark) ur
 }
 
 .col-action {
-  display: flex;         
-  gap: 10px;             
-  align-items: center;   
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .btn.small {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   text-align: center;
-  min-width: 70px;     
+  min-width: 70px;
 }
 
 .login-page {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh; 
+    height: 100vh;
 }
 
 .login-wrapper {
@@ -292,7 +292,7 @@ body { min-height: 100vh; color: var(--text-main); background: var(--bg-dark) ur
   color: var(--yellow);
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .movie-info p {
@@ -389,8 +389,8 @@ body { min-height: 100vh; color: var(--text-main); background: var(--bg-dark) ur
 }
 
 .detail-poster img {
-    width: 350px; 
-    height: 500px; 
+    width: 350px;
+    height: 500px;
     object-fit: cover;
     border-radius: 1rem;
     box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -505,20 +505,20 @@ body { min-height: 100vh; color: var(--text-main); background: var(--bg-dark) ur
     color: var(--text-muted);
 }
 
-body { 
-    display: flex; 
-    flex-direction: column; 
+body {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh; /* Memastikan body setinggi layar */
-    margin: 0; 
-    color: var(--text-main); 
-    background: var(--bg-dark) url("/static/background.png") center/cover no-repeat fixed; 
+    margin: 0;
+    color: var(--text-main);
+    background: var(--bg-dark) url("/static/background.png") center/cover no-repeat fixed;
 }
 
-.main { 
-    flex: 1; 
-    max-width: 1200px; 
-    margin: 0 auto; 
-    padding: 2rem; 
+.main {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
     width: 100%;
 }
 
@@ -604,17 +604,17 @@ body {
 }
 
 .table-poster {
-    width: 80px;             
-    aspect-ratio: 3 / 4;     
-    object-fit: cover;       
+    width: 80px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     display: block;
-    margin: 0 auto;          
+    margin: 0 auto;
 }
 
 .admin-table td {
-    vertical-align: middle; 
+    vertical-align: middle;
     padding: 1rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
@@ -622,8 +622,8 @@ body {
 .col-action {
     display: flex;
     gap: 8px;
-    justify-content: center; 
-    align-items: center;     
+    justify-content: center;
+    align-items: center;
 }
 
 .col-no, .col-year {
@@ -633,11 +633,11 @@ body {
 .admin-form select {
     padding: 0.8rem;
     border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    background: rgba(0, 0, 0, 0.3);             
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
     color: #fff;
     cursor: pointer;
-    appearance: none; 
+    appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23facc15'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
@@ -645,14 +645,14 @@ body {
 }
 
 .admin-form select option {
-    background: #020617; 
+    background: #020617;
     color: #fff;
 }
 
 .admin-form select:focus {
     outline: none;
     border-color: var(--yellow);
-    background: rgba(0, 0, 0, 0.5); 
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .main-header {
@@ -751,4 +751,49 @@ body {
         justify-items: center;
     }
     .card-head { justify-content: center; }
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.admin-table th, .admin-table td {
+    padding: 1rem;
+    word-wrap: break-word;
+}
+
+.col-action {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.badge-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+    min-width: 100px;
+}
+
+.watched-row {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+    }
+    .col-action {
+        flex-direction: column;
+    }
 }
